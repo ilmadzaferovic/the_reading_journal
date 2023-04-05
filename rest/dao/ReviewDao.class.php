@@ -10,6 +10,10 @@ class ReviewDao extends BaseDao{
     parent::__construct("reviews");
   }
 
+  public function get_review_by_id($id){
+    return $this->query("SELECT * FROM reviews WHERE book_book_id = :id", ['id' => $id]);
+  }
+
 }
 
 ?>

@@ -8,5 +8,9 @@ class ReviewService extends BaseService{
     parent::__construct(new ReviewDao());
   }
 
+  public function get_review_by_id($id){
+    return $this->dao->get_review_by_id($id);
+  }
+
 }
 ?>
