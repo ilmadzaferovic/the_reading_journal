@@ -12,6 +12,9 @@ var ReviewService = {
     $.ajax({
       url: 'rest/reviews',
       type: 'POST',
+      beforeSend: function(xhr){
+        xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+      },
       data: JSON.stringify(reviews),
       contentType: "application/json",
       dataType: "json",
@@ -27,27 +30,42 @@ var ReviewService = {
           <p class="list-group-item-text">`+result.rating+`</p>
         </div>`);
         
-      }
-      
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        // toastr.error(XMLHttpRequest.responseJSON.message);
+        UserService.logout();
+      },
     });
   },
 
   list_by_book_id: function(book_book_id){
     $("#book-review").html('loading ...');
-    $.get("rest/book/"+book_book_id+"/reviews", function(data) {
+    $.ajax({
+      url: "rest/book/"+book_book_id+"/reviews",
+      type: "GET",
+      beforeSend: function(xhr){
+        xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+      },
+      success: function(data) {
       var html = "";
       for(let i = 0; i < data.length; i++){
         html += `<div class="list-group-item book-review-`+data[i].id+`">
-          <button type="button" class="btn btn-outline-dark float-right btn-sm book-review-" onclick="ReviewService.get(`+data[i].id+`)" >Edit</button>
-          <button type="button" class="btn btn-outline-dark float-right btn-sm book-review-" onclick="ReviewService.delete(`+data[i].id+`)" >Delete</button>
-          <p class="list-group-item-text">`+data[i].read_date+`</p>
-          <p class="list-group-item-text">`+data[i].characters+`</p>
-          <p class="list-group-item-text">`+data[i].plot+`</p>
-          <p class="list-group-item-text">`+data[i].moments+`</p>
-          <p class="list-group-item-text">`+data[i].rating+`</p>
+          <button type="button" class="btn btn-outline-dark float-right btn-sm book-review-" onclick="ReviewService.get(`+data[i].id+`,` + book_book_id + `)" >Edit</button>
+          <button type="button" class="btn btn-outline-danger float-right btn-sm book-review-" onclick="ReviewService.delete(`+data[i].id+`)" >Delete</button>
+          <p class="list-group-item-text">I've finished this book on: `+data[i].read_date+`</p>
+          <p class="list-group-item-text">Notable characters: `+data[i].characters+`</p>
+          <p class="list-group-item-text">Plot summary: `+data[i].plot+`</p>
+          <p class="list-group-item-text">Favourite moments: `+data[i].moments+`</p>
+          <p class="list-group-item-text">I rate this book: `+data[i].rating+`</p>
         </div>`;
       }
+      
       $("#book-review").html(html);
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+      // toastr.error(XMLHttpRequest.responseJSON.message);
+      UserService.logout();
+    }
     });
 
     // note id populate and form validation
@@ -76,22 +94,31 @@ var ReviewService = {
     $.ajax({
       url: 'rest/reviews/'+id,
       type: 'DELETE',
+      beforeSend: function(xhr){
+        xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+      },
       success: function(result) {
       
         
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
-        
-       
-        //alert("Status: " + textStatus); alert("Error: " + errorThrown);
+        // toastr.error(XMLHttpRequest.responseJSON.message);
+        UserService.logout();
       }
     });
   },
 
-  get: function(id){
+  get: function(id, bookId){
     $('.book-review-').attr('disabled', true);
-    $.get('rest/reviews/'+id, function(data){
+    $.ajax({
+      url: "rest/reviews/"+id,
+      type: "GET",
+      beforeSend: function(xhr){
+        xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+      },
+      success: function(data){
       $("#id").val(data.id);
+      $("#hiddenBookId").val(bookId);
       $("#read_date").val(data.read_date);
       $("#characters").val(data.characters);
       $("#plot").val(data.plot);
@@ -99,7 +126,12 @@ var ReviewService = {
       $("#rating").val(data.rating);
       $("#editReviewModal").modal("show");
       $('.book-review-').attr('disabled', false);
-    })
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+      toastr.error(XMLHttpRequest.responseJSON.message);
+      UserService.logout();
+    },
+  });
   },
 
   update: function(){
@@ -116,15 +148,31 @@ var ReviewService = {
     $.ajax({
       url: 'rest/reviews/'+$('#id').val(),
       type: 'PUT',
+      beforeSend: function(xhr){
+        xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+      },
       data: JSON.stringify(reviews),
       contentType: "application/json",
       dataType: "json",
       success: function(result) {
+        var bookId = $('#hiddenBookId').val();
           $("#editReviewModal").modal("hide");
+          
           $('.save-review-button').attr('disabled', false);
+          // $('.modal-backdrop').remove();
+          setTimeout(function(){
+            $('body').removeAttr( 'style' );
+            $('body').addClass('modal-open')
+          }, 1000);
+
           $("#book-review").html('<div class="spinner-border" role="status"> <span class="sr-only"></span>  </div>');
-          ReviewService.list_by_book_id(); // perf optimization
-      }
+         
+          ReviewService.list_by_book_id(bookId); // perf optimization
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        toastr.error(XMLHttpRequest.responseJSON.message);
+        UserService.logout();
+      },
     });
   },
 

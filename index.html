@@ -4,9 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Reading Journal</title>
-  
-
-
+  <link rel="icon" type="image/x-icon" href="images\favicon.png">
+  <link rel="stylesheet" href="./css/images.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -17,21 +16,20 @@
 <script src="js/book-service.js"></script>
 <script src="js/review-service.js"></script>
 <script src="js/challenge-service.js"></script>
+<script src="js/dnf-service.js"></script>
+<script src="js/user-service.js"></script>
+
 
 <script>
-  BookService.init();
-</script>
-<!-- <script> ReviewService.init();</script> -->
-<script>
-  function previewImage(event) {
-    var reader = new FileReader();
-    reader.onload = function(){
-      var output = document.getElementById('cover-image');
-      output.src = reader.result;
-    };
-    reader.readAsDataURL(event.target.files[0]);
+    var token = localStorage.getItem("token");
+  if (token){
+    BookService.init();
+  }else{
+    window.location.replace("login.html");
   }
+ // BookService.init();
 </script>
+
 
 
 
@@ -39,86 +37,50 @@
     body {
       background-image: url('https://cutewallpaper.org/28/desktop-wallpaper-read/2465028732.jpg');
     }
-
-   
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-
-      
-
-     
-    
     </style>
+
+
 </head>
+
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a style="font-family: cursive;" class="navbar-brand" href="#">The Reading Journal</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div>
-        <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addBookModal">Add a Book</button>
-      </div>
-      <div class="float-end" class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            
-            <button type="button" class="btn btn-link">DNF</button>
-          </li>
-          <li class="nav-item">
-            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#challengeModal">
-              Reading Challenges
-            </button>
-          </li>
-        </ul>
-      </div>
+      <a style="font-family: cursive;" class="navbar-brand">The Reading Journal</a>
+      
+      
+        <div class="btn-group">
+          <button type="button" class="btn btn-outline-light dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Actions
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addBookModal">Add a Book</a>
+            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#challengeModal" onclick="ChallengeService.list()">Challenges</a>
+            <a class="dropdown-item" onClick="DnfService.redirectDnf()">DNF</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" onclick="UserService.logout()">Log Out</a>
+          </div>
+        </div>
+      
+      
+     
     </div>
   </nav>
 
 
   
 
-<!-- <main>
-  
-
-  <div class="container marketing" style="margin-top:100px;">
-   
-    <div class="row">
-    </div>
-
-    <div id="book-card" class="row">
-      <div class="spinner-border" role="status">
-       
-      </div>
-    </div>
-  </div>
-
-  
-
-</main> -->
 
 <main>
-  <div class="container marketing" style="margin-top:100px;">
-    <!-- Three columns of text below the carousel -->
+  <div id="cards" class="container marketing" style="margin-top:100px; margin-bottom: 100px;">
+   
   
 
-    <div id="book-card" class="row">
+    <div id="book-card" class="row" >
+     
       <div class="spinner-border" role="status">
         <span class="sr-only"></span>
       </div>
-    </div><!-- /.row -->
+    </div>
   </div>
 
 </main>
@@ -139,10 +101,11 @@
           <h5 class="modal-title" id="addBookFormTitle">Add Book Information</h5>
         </div>
         <div id="addBookFormBody" class="modal-body">
-            <!-- <div class="form-group">
+            <div class="form-group">
               <label>Upload Book Cover</label>
-              <input name="cover" type="file" class="form-control" onchange="previewImage(event)" placeholder="Upload Photo">
-            </div> -->
+              <input id="image_inputs" name="cover" type="file" accept="image/jpeg, image/png, image/jpg" class="form-control" placeholder="Upload Photo">
+              
+            </div>
             <div class="form-group">
               <label>Title:</label>
               <input name="title" type="text" class="form-control required" placeholder="Book Title">
@@ -162,7 +125,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary" onClick="BookService.test()">Submit</button>
+          <button type="submit" class="btn btn-primary" data-dismiss="modal" onClick="BookService.submit()">Submit</button>
         </div>
       </form>
     </div>
@@ -178,12 +141,25 @@
       </div>
       <div class="modal-body">
         <input id="id" type="hidden" />
-        <input id="cover" type="file" />
+        
+
+      
+        <div>
+          <label>Edit title</label>
         <input id="title" type="text" />
-        <input id="author" type="text" />
-        <input id="title" type="text" />
-        <input id="published" type="date" />
+        </div>
+        <div>
+          <label>Edit author</label>
+          <input id="author" type="text" />
+        </div>
+        <div>
+          <label>Edit date of publishing</label>
+          <input id="published" type="date" />
+          </div>
+          <div>
+            <label>Edit genre</label>
         <input id="genre" type="text" />
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -203,7 +179,7 @@
     <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Book Reviews</h5>
-          <button type="button" class="btn-close float-right btn-outline-danger" data-bs-dismiss="modal" aria-label="Close">Close</button>
+          <button type="button" class="btn-close float-right btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Close</button>
           
         </div>
         <div class="modal-body">
@@ -237,7 +213,7 @@
               </div>
 
               <div class="col-sm-4">
-                <button type="submit" class="btn btn-primary mb-2" onClick="ReviewService.test()">Add</button>
+                <button type="submit" class="btn btn-primary mb-2" >Add</button>
               </div>
             </div>
           </form>
@@ -258,6 +234,7 @@
       </div>
       <div class="modal-body">
         <input id="id" type="hidden" />
+        <input id="hiddenBookId" type="hidden" />
         <input id="read_date" type="date" />
         <input id="characters" type="text" />
         <input id="plot" type="text" />
@@ -272,7 +249,7 @@
   </div>
 </div>
 
-<!-- CHALLENGES MODAL -->
+<!-- ADD CHALLENGES MODAL -->
 
 <div class="modal fade" id="challengeModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl">
@@ -286,7 +263,7 @@
             <form id="addChallengeForm">
               <div class="input-group mb-3">
                 <input name="description" type="text" class="form-control" placeholder="Challenge Description">
-                <button class="btn btn-outline-secondary" type="button" id="addChallengeButton" onClick="ChallengeService.test()">Add</button>
+                <button class="btn btn-primary" type="button" id="addChallengeButton" onClick="ChallengeService.submit()">Add</button>
               </div>
             </form>
            
@@ -302,7 +279,7 @@
 
         </div>
         <div class="modal-footer"> 
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn btn-danger" data-bs-dismiss="modal">Close</button>
         </div>
     </div>
   </div>
@@ -317,7 +294,7 @@
       </div>
       <div class="modal-body">
         <input id="id" type="hidden" />
-        <input id="challenge" type="text" />
+        <input id="description" type="text" />
        
       </div>
       <div class="modal-footer">
