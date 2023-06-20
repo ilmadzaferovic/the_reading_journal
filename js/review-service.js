@@ -19,7 +19,7 @@ var ReviewService = {
       contentType: "application/json",
       dataType: "json",
       success: function(result) {
-        // append to the list
+        
         $("#book-review").append(`<div class="list-group-item book-review-`+result.id+`">
           <button type="button" class="btn btn-outline-dark float-right btn-sm book-review-" onclick="ReviewService.get(`+result.id+`)" >Edit</button>
           <button type="button" class="btn btn-outline-dark float-right btn-sm book-review-" onclick="ReviewService.delete(`+result.id+`)" >Delete</button>
@@ -68,7 +68,7 @@ var ReviewService = {
     }
     });
 
-    // note id populate and form validation
+    
     $('#addReviewForm input[name="book_book_id"]').val(book_book_id);
     $('#addReviewForm input[name="read_date"]').val(ReviewService.current_date());
 

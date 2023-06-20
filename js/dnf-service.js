@@ -1,12 +1,12 @@
 var DnfService = {
     init: function(){
-      $('#addDnfForm').validate({
-        debug: true,
-        submitHandler: function(form) {
-          var entity = Object.fromEntries((new FormData(form)).entries());
-          DnfService.add(entity);
-        }
-      });
+      // $('#addDnfForm').validate({
+      //   debug: true,
+      //   submitHandler: function(form) {
+      //     var entity = Object.fromEntries((new FormData(form)).entries());
+      //     DnfService.add(entity);
+      //   }
+      // });
        DnfService.list();
   
     },

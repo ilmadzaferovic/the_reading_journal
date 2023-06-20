@@ -8,6 +8,7 @@ var BookService = {
     //   }
     // });
      BookService.list();
+     BookService.list_name();
 
   },
 
@@ -189,7 +190,30 @@ var BookService = {
     });
   },
 
- 
-
+  list_name: function(){
+    $.ajax({
+      //url: "rest/user/"+id,
+      url: "rest/user",
+      type: "GET",
+      beforeSend: function(xhr){
+        xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
+      },
+      success: function(data) {
+      $("#hi").html("");
+      var html = "";
+      for(let i = 0; i < data.length; i++){
+        html += `
+          <p class="list-group-item-text"> `+data[i].email+`</p>
+        `;
+      }
+      $("#hi").html(html);
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+      toastr.error(XMLHttpRequest.responseJSON.message);
+      UserService.logout();
+    }
+    });
+  },
+  
   
 }

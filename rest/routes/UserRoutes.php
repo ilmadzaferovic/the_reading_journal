@@ -29,11 +29,13 @@ use Firebase\JWT\Key;
 Flight::route('POST /login', function(){
     $login = Flight::request()->data->getData();
     $user = Flight::userDao()->get_user_by_email($login['email']);
+    //$book=Flight::bookService()->get_by_id($user['id']);
     if (isset($user['id'])){
       if($user['password'] == md5($login['password'])){
         unset($user['password']);
         $jwt = JWT::encode($user, Config::JWT_SECRET(), 'HS256');
         Flight::json(['token' => $jwt]);
+        //unset($book['id']);
       }else{
         Flight::json(["message" => "Wrong password"], 404);
       }
@@ -71,6 +73,15 @@ Flight::route('POST /register', function(){
   $registrationData = Flight::request()->data->getData();
   $registrationData['password'] = md5($registrationData['password']);
   Flight::json(Flight::userDao()->add($registrationData));
+});
+
+
+Flight::route('GET /user/id', function($id){
+  Flight::json(Flight::userDao()->get_by_id($id));
+});
+
+Flight::route('GET /user', function(){
+  Flight::json(Flight::userDao()->get_all());
 });
 
 ?>
