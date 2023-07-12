@@ -1,0 +1,265 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a style="font-family: cursive;" class="navbar-brand">The Reading Journal</a>
+
+        <div id="hi"> </div>
+
+
+        <div class="btn-group">
+            <button type="button" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Actions
+            </button>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addBookModal">Add a Book</a>
+                <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#challengeModal"
+                    onclick="ChallengeService.list()">Challenges</a>
+                <a class="dropdown-item" href="#view_dnf">DNF</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" onclick="UserService.logout()">Log Out</a>
+            </div>
+        </div>
+
+
+
+    </div>
+</nav>
+
+<main>
+    <div id="cards" class="container marketing" style="margin-top:100px; margin-bottom: 100px;">
+
+
+
+        <div id="book-card" class="row">
+
+            <div class="spinner-border" role="status">
+                <span class="sr-only"></span>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+
+<!-- Modals definitions below -->s
+
+<!-- ADD BOOK MODAL -->
+<div class="modal fade" id="addBookModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="addBookForm" onsubmit="return false">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addBookFormTitle">Add Book Information</h5>
+          </div>
+          <div id="addBookFormBody" class="modal-body">
+            <div class="form-group">
+              <label>Upload Book Cover</label>
+              <input id="image_inputs" name="cover" type="file" accept="image/jpeg, image/png, image/jpg"
+                class="form-control" placeholder="Upload Photo">
+  
+            </div>
+            <div class="form-group">
+              <label>Title:</label>
+              <input name="title" type="text" class="form-control required" placeholder="Book Title">
+            </div>
+            <div class="form-group">
+              <label>Author:</label>
+              <input name="author" type="text" class="form-control required" placeholder="Author">
+            </div>
+            <div class="form-group">
+              <label>Genre:</label>
+              <input name="genre" type="text" class="form-control required" placeholder="Genre">
+            </div>
+            <div class="form-group">
+              <label>Published:</label>
+              <input name="published" type="date" class="form-control required" placeholder="Published">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" data-dismiss="modal"
+              onClick="BookService.submit()">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!--EDIT BOOK MODAL-->
+  <div class="modal fade" id="editBookModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Book Information</h5>
+        </div>
+        <div class="modal-body">
+          <input id="id" type="hidden" />
+  
+  
+  
+          <div>
+            <label>Edit title</label>
+            <input id="title" type="text" />
+          </div>
+          <div>
+            <label>Edit author</label>
+            <input id="author" type="text" />
+          </div>
+          <div>
+            <label>Edit date of publishing</label>
+            <input id="published" type="date" />
+          </div>
+          <div>
+            <label>Edit genre</label>
+            <input id="genre" type="text" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary save-book-button" onclick="BookService.update()">Save
+            changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  
+  
+  <!-- MANAGE REVIEWS -->
+  <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Book Reviews</h5>
+          <button type="button" class="btn-close float-right btn btn-danger" data-bs-dismiss="modal"
+            aria-label="Close">Close</button>
+  
+        </div>
+        <div class="modal-body">
+  
+  
+          <div id="book-review" class="list-group">
+  
+  
+          </div>
+  
+        </div>
+  
+        <div class="row">
+          <form id="addReviewForm" class="form" onsubmit="return false">
+            <input name="book_book_id" type="hidden" />
+            <div class="row" style="padding: 20px;">
+              <div class="col-sm-4">
+                <input name="read_date" type="date" class="form-control required" placeholder="Finished Date">
+              </div>
+              <div class="col-sm-4">
+                <input name="characters" type="text" class="form-control required" placeholder="Favourite Characters">
+              </div>
+              <div class="col-sm-4">
+                <input name="plot" type="text" class="form-control required" placeholder="Short Plot Summary">
+              </div>
+              <div class="col-sm-4">
+                <input name="moments" type="text" class="form-control required" placeholder="Favourite Moments">
+              </div>
+              <div class="col-sm-4">
+                <input name="rating" type="text" class="form-control required" placeholder="I rate this book:">
+              </div>
+  
+              <div class="col-sm-4">
+                <button type="submit" class="btn btn-primary mb-2">Add</button>
+              </div>
+            </div>
+          </form>
+        </div>
+  
+        <div class="modal-footer"> </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  <!--EDIT Review MODAL-->
+  <div class="modal fade" id="editReviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Review Information</h5>
+        </div>
+        <div class="modal-body">
+          <input id="id" type="hidden" />
+          <input id="hiddenBookId" type="hidden" />
+          <input id="read_date" type="date" />
+          <input id="characters" type="text" />
+          <input id="plot" type="text" />
+          <input id="moments" type="text" />
+          <input id="rating" type="text" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary save-review-button" onclick="ReviewService.update()">Save
+            changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ADD CHALLENGES MODAL -->
+  
+  <div class="modal fade" id="challengeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">My Reading Challenge</h5>
+        </div>
+        <div class="modal-body">
+  
+          <div class="pb-2">
+            <form id="addChallengeForm">
+              <div class="input-group mb-3">
+                <input name="description" type="text" class="form-control" placeholder="Challenge Description">
+                <button class="btn btn-primary" type="button" id="addChallengeButton"
+                  onClick="ChallengeService.submit()">Add</button>
+              </div>
+            </form>
+  
+          </div>
+  
+          <hr>
+          <hr>
+  
+          <div id="challengeField">
+  
+  
+  
+          </div>
+  
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn btn-danger" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!--EDIT CHALLENGE MODAL-->
+  <div class="modal fade" id="editChallengeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Challenge</h5>
+        </div>
+        <div class="modal-body">
+          <input id="id" type="hidden" />
+          <input id="description" type="text" />
+  
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary save-challenge-button" onclick="ChallengeService.update()">Save
+            changes</button>
+        </div>
+      </div>
+    </div>
+  </div>

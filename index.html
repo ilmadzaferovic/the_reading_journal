@@ -1,310 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Reading Journal</title>
   <link rel="icon" type="image/x-icon" href="images\favicon.png">
   <link rel="stylesheet" href="./css/images.css">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="./css/spapp.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+    integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+    integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
+    crossorigin="anonymous"></script>
   <script src="js/jquery-3.6.4.min.js"></script>
-<script src="js/bootstrap.bundle.min.js"></script>
-<script src="js/jquery.validate.min.js"></script>
-<script src="js/book-service.js"></script>
-<script src="js/review-service.js"></script>
-<script src="js/challenge-service.js"></script>
-<script src="js/dnf-service.js"></script>
-<script src="js/user-service.js"></script>
+  <script src="js/jquery.spapp.js"></script>
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/jquery.validate.min.js"></script>
+  <script src="js/book-service.js"></script>
+  <script src="js/review-service.js"></script>
+  <script src="js/challenge-service.js"></script>
+  <script src="js/dnf-service.js"></script>
+  <script src="js/user-service.js"></script>
 
 
-<script>
-    var token = localStorage.getItem("token");
-  if (token){
-    BookService.init();
-  }else{
-    window.location.replace("login.html");
-  }
- // BookService.init();
-</script>
+  <script>
+    // unique Id for the logout timer
+    var timeoutID;
 
+    function actionHappened() {
+      clearTimeout(timeoutID);
+      autoLogout();
+    }
 
+    (function autoLogout() {
+      timeoutID = setTimeout(() => {
+        localStorage.clear();
+        window.location.replace("login.html");
+      }, 5 * 60 * 1000);
+    })();
 
+    function booksStartup() {
+      var token = localStorage.getItem("token");
+      if (token) {
+        BookService.init();
+      } else {
+        window.location.replace("login.html");
+      }
+    }
+
+    function dnfStartup() {
+      var token = localStorage.getItem("token");
+      if (token) {
+        DnfService.init();
+      } else {
+        window.location.replace("login.html");
+      }
+    }
+    
+  </script>
 
   <style>
     body {
       background-image: url('https://cutewallpaper.org/28/desktop-wallpaper-read/2465028732.jpg');
     }
-    </style>
+  </style>
 
 
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a style="font-family: cursive;" class="navbar-brand">The Reading Journal</a>
-      
-      <div id="hi"> </div>
 
+  <main id="spapp" role="main">
+    <section id="view_books"></section>
+    <section id="view_dnf"></section>
+    <section id="error_404"><h1>Page not found</h1></section>
+  </main>
 
-        <div class="btn-group">
-          <button type="button" class="btn btn-outline-light dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Actions
-          </button>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addBookModal">Add a Book</a>
-            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#challengeModal" onclick="ChallengeService.list()">Challenges</a>
-            <a class="dropdown-item" onClick="DnfService.redirectDnf()">DNF</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" onclick="UserService.logout()">Log Out</a>
-          </div>
-        </div>
-      
-      
-     
-    </div>
-  </nav>
+  <script>
+    var app = $.spapp({
+      defaultView: "#view_books",
+      templateDir: "./tpl/",
+      pageNotFound: "error_404"
+    });
 
+    app.route({
+      view: "view_books",
+      load: "books.html",
+      onCreate: function () { console.log("in view books onCreate"); },
+      onReady: function () { console.log("in view books onReady"); booksStartup();}
+    });
 
-  
+    app.route({
+        view: "view_dnf",
+        load: "dnf.html",
+        onCreate: function () { console.log("in view dnf onCreate"); },
+        onReady: function () { console.log("in view dnf onReady"); dnfStartup();}
+      });
 
-
-<main>
-  <div id="cards" class="container marketing" style="margin-top:100px; margin-bottom: 100px;">
-   
-  
-
-    <div id="book-card" class="row" >
-     
-      <div class="spinner-border" role="status">
-        <span class="sr-only"></span>
-      </div>
-    </div>
-  </div>
-
-</main>
-  
- 
-  
-    
+    app.run();
+  </script>
 </body>
-
-
-
-<!-- ADD BOOK MODAL -->
-<div class="modal fade" id="addBookModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form id="addBookForm" onsubmit="return false">
-        <div class="modal-header">
-          <h5 class="modal-title" id="addBookFormTitle">Add Book Information</h5>
-        </div>
-        <div id="addBookFormBody" class="modal-body">
-            <div class="form-group">
-              <label>Upload Book Cover</label>
-              <input id="image_inputs" name="cover" type="file" accept="image/jpeg, image/png, image/jpg" class="form-control" placeholder="Upload Photo">
-              
-            </div>
-            <div class="form-group">
-              <label>Title:</label>
-              <input name="title" type="text" class="form-control required" placeholder="Book Title">
-            </div>
-            <div class="form-group">
-              <label>Author:</label>
-              <input name="author" type="text" class="form-control required" placeholder="Author">
-            </div>
-            <div class="form-group">
-              <label>Genre:</label>
-              <input name="genre" type="text" class="form-control required" placeholder="Genre">
-            </div>
-            <div class="form-group">
-              <label>Published:</label>
-              <input name="published" type="date" class="form-control required" placeholder="Published">
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary" data-dismiss="modal" onClick="BookService.submit()">Submit</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!--EDIT BOOK MODAL-->
-<div class="modal fade" id="editBookModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit Book Information</h5>
-      </div>
-      <div class="modal-body">
-        <input id="id" type="hidden" />
-        
-
-      
-        <div>
-          <label>Edit title</label>
-        <input id="title" type="text" />
-        </div>
-        <div>
-          <label>Edit author</label>
-          <input id="author" type="text" />
-        </div>
-        <div>
-          <label>Edit date of publishing</label>
-          <input id="published" type="date" />
-          </div>
-          <div>
-            <label>Edit genre</label>
-        <input id="genre" type="text" />
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary save-book-button" onclick="BookService.update()">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
-
-<!-- MANAGE REVIEWS -->
-<div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Book Reviews</h5>
-          <button type="button" class="btn-close float-right btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Close</button>
-          
-        </div>
-        <div class="modal-body">
-
-
-            <div id="book-review" class="list-group">
-              
-              
-            </div>
-
-        </div>
-
-        <div class="row">
-          <form id="addReviewForm" class="form" onsubmit="return false">
-            <input name="book_book_id" type="hidden" />
-            <div class="row" style="padding: 20px;">
-              <div class="col-sm-4">
-                <input name="read_date" type="date" class="form-control required" placeholder="Finished Date">
-              </div>
-              <div class="col-sm-4">
-                <input name="characters" type="text" class="form-control required" placeholder="Favourite Characters">
-              </div>
-              <div class="col-sm-4">
-                <input name="plot" type="text" class="form-control required" placeholder="Short Plot Summary">
-              </div>
-              <div class="col-sm-4">
-                <input name="moments" type="text" class="form-control required" placeholder="Favourite Moments">
-              </div>
-              <div class="col-sm-4">
-                <input name="rating" type="text" class="form-control required" placeholder="I rate this book:">
-              </div>
-
-              <div class="col-sm-4">
-                <button type="submit" class="btn btn-primary mb-2" >Add</button>
-              </div>
-            </div>
-          </form>
-        </div>
-
-        <div class="modal-footer"> </div>
-    </div>
-  </div>
-</div>
-
-
-<!--EDIT Review MODAL-->
-<div class="modal fade" id="editReviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit Review Information</h5>
-      </div>
-      <div class="modal-body">
-        <input id="id" type="hidden" />
-        <input id="hiddenBookId" type="hidden" />
-        <input id="read_date" type="date" />
-        <input id="characters" type="text" />
-        <input id="plot" type="text" />
-        <input id="moments" type="text" />
-        <input id="rating" type="text" />  
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary save-review-button" onclick="ReviewService.update()">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ADD CHALLENGES MODAL -->
-
-<div class="modal fade" id="challengeModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">My Reading Challenge</h5>
-        </div>
-        <div class="modal-body">
-         
-          <div class="pb-2">
-            <form id="addChallengeForm">
-              <div class="input-group mb-3">
-                <input name="description" type="text" class="form-control" placeholder="Challenge Description">
-                <button class="btn btn-primary" type="button" id="addChallengeButton" onClick="ChallengeService.submit()">Add</button>
-              </div>
-            </form>
-           
-          </div>
-
-          <hr><hr>
-
-        <div id="challengeField">
-          
-          
-
-        </div>
-
-        </div>
-        <div class="modal-footer"> 
-          <button type="button" class="btn btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div>
-    </div>
-  </div>
-</div>
-
-<!--EDIT CHALLENGE MODAL-->
-<div class="modal fade" id="editChallengeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit Challenge</h5>
-      </div>
-      <div class="modal-body">
-        <input id="id" type="hidden" />
-        <input id="description" type="text" />
-       
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary save-challenge-button" onclick="ChallengeService.update()">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 </html>

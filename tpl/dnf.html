@@ -1,0 +1,96 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a style="font-family: cursive;" class="navbar-brand" href="#">The Reading Journal</a>
+
+        <div class="btn-group float-left" role="group" aria-label="Basic outlined example">
+            <button type="button" class="btn btn-light" onClick="DnfService.redirect()">Home</button>
+            <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#addDnfModal">Add
+                Dnf</button>
+
+        </div>
+
+    </div>
+</nav>
+
+<main></main>
+<div class="container marketing" style="margin-top:100px;" style="margin-left:20px;">
+    <div id="dnf-card" class="row">
+
+    </div>
+</div>
+</main>
+
+
+
+<!-- ADD DNF MODAL -->
+<div class="modal fade" id="addDnfModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="addDnfForm" onsubmit="return false">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addDnfFormTitle">Add Book Information</h5>
+                </div>
+                <div id="addDnfFormBody" class="modal-body">
+                    <div class="form-group">
+                        <label>Upload Book Cover</label>
+                        <input id="image_input" name="dcover" type="file" accept="image/jpeg, image/png, image/jpg"
+                            class="form-control" placeholder="Upload Photo">
+
+                    </div>
+                    <div class="form-group">
+                        <label>Title:</label>
+                        <input name="b_title" type="text" class="form-control required" placeholder="Book Title">
+                    </div>
+                    <div class="form-group">
+                        <label>Author:</label>
+                        <input name="b_author" type="text" class="form-control required" placeholder="Author">
+                    </div>
+                    <div class="form-group">
+                        <label>Genre:</label>
+                        <input name="b_genre" type="text" class="form-control required" placeholder="Genre">
+                    </div>
+                    <div class="form-group">
+                        <label>Published:</label>
+                        <input name="b_published" type="date" class="form-control required" placeholder="Published">
+                    </div>
+                    <div class="form-group">
+                        <label>DNF Date:</label>
+                        <input name="dnf_date" type="date" class="form-control required" placeholder="DNF Date">
+                    </div>
+                    <div class="form-group">
+                        <label>Reason:</label>
+                        <input name="reason" type="text" class="form-control required" placeholder="Reason">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" onClick="DnfService.submit()">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- EDIT DNF MODAL -->
+<div class="modal fade" id="editDnfModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Dnf Information</h5>
+            </div>
+            <div class="modal-body">
+                <input id="id" type="hidden" />
+                <input id="b_title" type="text" />
+                <input id="dnf_date" type="date" />
+                <input id="reason" type="text" />
+                <input id="b_published" type="date" />
+                <input id="b_author" type="text" />
+                <input id="b_genre" type="text" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary save-dnf-button" onclick="DnfService.update()">Save
+                    changes</button>
+            </div>
+        </div>
+    </div>
+</div>
