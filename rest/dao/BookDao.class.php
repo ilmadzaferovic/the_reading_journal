@@ -10,6 +10,9 @@ class BookDao extends BaseDao{
     parent::__construct("book");
   }
 
+  public function get_books_by_user($id){
+    return $this->query("SELECT * FROM book WHERE user_id = :id", ['id' => $id]);
+  }
 }
 
 ?>

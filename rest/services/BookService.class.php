@@ -8,5 +8,8 @@ class BookService extends BaseService{
     parent::__construct(new BookDao());
   }
 
+  public function get_books_by_user($id){
+    return $this->dao->get_books_by_user($id);
+  }
 }
 ?>

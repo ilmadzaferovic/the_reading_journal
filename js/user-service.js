@@ -5,12 +5,6 @@ var UserService = {
         window.location.replace("index.html");
         
       }
-      $('#loginForm').validate({
-        submitHandler: function(form) {
-          var entity = Object.fromEntries((new FormData(form)).entries());
-          UserService.login(entity);
-        }
-      });
     },
 
     test: function(a, b, c){
@@ -31,6 +25,7 @@ var UserService = {
         success: function(result) {
           console.log(result);
           localStorage.setItem("token", result.token);
+          localStorage.setItem("userId", result.id);
           window.location.replace("index.html");
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {

@@ -1,14 +1,9 @@
 var BookService = {
   init: function(){
-    // $('#addBookForm').validate({
-    //   debug: true,
-    //   submitHandler: function(form) {
-    //     var entity = Object.fromEntries((new FormData(form)).entries());
-    //     BookService.add(entity);
-    //   }
-    // });
+     var id=window.localStorage.getItem('userId');
      BookService.list();
-     BookService.list_name();
+     BookService.list_name(id);
+    
 
   },
 
@@ -23,7 +18,7 @@ var BookService = {
 
   list: function(){
     $.ajax({
-      url: "rest/book",
+      url: `rest/user/${window.localStorage.getItem('userId')}/book`,
       type: "GET",
       beforeSend: function(xhr){
         xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
@@ -109,6 +104,9 @@ var BookService = {
   },
 
   sendAddRequest: function(book){
+
+    book["user_id"] = window.localStorage.getItem('userId');
+    console.log(JSON.stringify(book));
     $.ajax({
       url: 'rest/book',
       type: 'POST',
@@ -190,10 +188,9 @@ var BookService = {
     });
   },
 
-  list_name: function(){
+  list_name: function(id){
     $.ajax({
-      //url: "rest/user/"+id,
-      url: "rest/user",
+      url: "rest/user/"+id,
       type: "GET",
       beforeSend: function(xhr){
         xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
@@ -201,11 +198,9 @@ var BookService = {
       success: function(data) {
       $("#hi").html("");
       var html = "";
-      for(let i = 0; i < data.length; i++){
         html += `
-          <p class="list-group-item-text"> `+data[i].email+`</p>
+          <p style="color:white" class="list-group-item-text"> `+data.email+`</p>
         `;
-      }
       $("#hi").html(html);
     },
     error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -214,6 +209,8 @@ var BookService = {
     }
     });
   },
+
+  
   
   
 }

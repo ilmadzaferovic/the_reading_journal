@@ -11,6 +11,10 @@ Flight::route('GET /book', function(){
   Flight::json(Flight::bookService()->get_all());
 });
 
+Flight::route('GET /user/@id/book', function($id){
+  Flight::json(Flight::bookService()->get_books_by_user($id));
+});
+
 /**
   * @OA\Get(path="/book/{id}", tags={"book"}, security={{"ApiKeyAuth": {}}},
   *     @OA\Parameter(in="path", name="id", example=1, description="Book ID"),
