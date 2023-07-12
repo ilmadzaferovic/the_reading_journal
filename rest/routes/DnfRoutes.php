@@ -106,4 +106,8 @@ Flight::route('DELETE /dnf/@id', function($id){
   Flight::json(["message" => "deleted"]);
 });
 
+Flight::route('GET /user/@id/dnf', function($id){
+  Flight::json(Flight::dnfService()->get_dnf_by_user($id));
+});
+
 ?>

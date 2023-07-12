@@ -15,9 +15,8 @@ var DnfService = {
 
 
   list: function () {
-    debugger;
     $.ajax({
-      url: "rest/dnf",
+      url: `rest/user/${window.localStorage.getItem('userId')}/dnf`,
       type: "GET",
       beforeSend: function (xhr) {
         xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
@@ -106,6 +105,7 @@ var DnfService = {
   },
 
   sendAddRequest: function (dnf) {
+    dnf["user_id"] = window.localStorage.getItem('userId');
     $.ajax({
       url: 'rest/dnf',
       type: 'POST',

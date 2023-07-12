@@ -8,5 +8,8 @@ class ChallengeService extends BaseService{
     parent::__construct(new ChallengeDao());
   }
 
+  public function get_challenge_by_user($id){
+    return $this->dao->get_challenge_by_user($id);
+  }
 }
 ?>

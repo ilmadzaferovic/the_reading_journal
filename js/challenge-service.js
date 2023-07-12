@@ -23,7 +23,7 @@ var ChallengeService = {
 
   list: function(){
     $.ajax({
-      url: "rest/challenges",
+      url: `rest/user/${window.localStorage.getItem('userId')}/challenge`,
       type: "GET",
       beforeSend: function(xhr){
         xhr.setRequestHeader('Authorization', localStorage.getItem('token'));
@@ -79,6 +79,8 @@ var ChallengeService = {
   },
 
   add: function(challenges){
+    challenges["user_id"] = window.localStorage.getItem('userId');
+    
     $.ajax({
       url: 'rest/challenges',
       type: 'POST',

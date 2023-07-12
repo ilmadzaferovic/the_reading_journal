@@ -31,20 +31,7 @@
 
 
   <script>
-    // unique Id for the logout timer
-    var timeoutID;
-
-    function actionHappened() {
-      clearTimeout(timeoutID);
-      autoLogout();
-    }
-
-    (function autoLogout() {
-      timeoutID = setTimeout(() => {
-        localStorage.clear();
-        window.location.replace("login.html");
-      }, 5 * 60 * 1000);
-    })();
+    
 
     function booksStartup() {
       var token = localStorage.getItem("token");
@@ -93,15 +80,15 @@
     app.route({
       view: "view_books",
       load: "books.html",
-      onCreate: function () { console.log("in view books onCreate"); },
-      onReady: function () { console.log("in view books onReady"); booksStartup();}
+      onCreate: function () {  },
+      onReady: function () {  booksStartup();}
     });
 
     app.route({
         view: "view_dnf",
         load: "dnf.html",
-        onCreate: function () { console.log("in view dnf onCreate"); },
-        onReady: function () { console.log("in view dnf onReady"); dnfStartup();}
+        onCreate: function () {  },
+        onReady: function () {  dnfStartup();}
       });
 
     app.run();

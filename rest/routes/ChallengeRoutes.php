@@ -94,4 +94,9 @@ Flight::route('DELETE /challenges/@id', function($id){
   Flight::json(["message" => "deleted"]);
 });
 
+Flight::route('GET /user/@id/challenge', function($id){
+  Flight::json(Flight::challengeService()->get_challenge_by_user($id));
+});
+
+
 ?>

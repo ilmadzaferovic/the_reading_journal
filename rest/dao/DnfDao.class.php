@@ -10,6 +10,9 @@ class DnfDao extends BaseDao{
     parent::__construct("dnf");
   }
 
+  public function get_dnf_by_user($id){
+    return $this->query("SELECT * FROM dnf WHERE user_id = :id", ['id' => $id]);
+  }
 }
 
 ?>

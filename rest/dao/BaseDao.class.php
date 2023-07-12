@@ -9,7 +9,6 @@ class BaseDao{
 
   public function __construct($table_name){
     $this->table_name = $table_name;
-    $this->table_name = $table_name;
     $servername = Config::DB_HOST();
     $username = Config::DB_USERNAME();
     $password = Config::DB_PASSWORD();

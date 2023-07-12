@@ -10,6 +10,10 @@ class ChallengeDao extends BaseDao{
     parent::__construct("challenges");
   }
 
+  public function get_challenge_by_user($id){
+    return $this->query("SELECT * FROM challenges WHERE user_id = :id", ['id' => $id]);
+  }
+
 }
 
 ?>

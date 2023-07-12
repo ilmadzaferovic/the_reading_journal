@@ -199,7 +199,7 @@ var BookService = {
       $("#hi").html("");
       var html = "";
         html += `
-          <p style="color:white" class="list-group-item-text"> `+data.email+`</p>
+          <p style="color:white" class="list-group-item-text">Welcome, `+data.email+`</p>
         `;
       $("#hi").html(html);
     },

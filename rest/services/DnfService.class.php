@@ -8,5 +8,8 @@ class DnfService extends BaseService{
     parent::__construct(new DnfDao());
   }
 
+  public function get_dnf_by_user($id){
+    return $this->dao->get_dnf_by_user($id);
+  }
 }
 ?>
